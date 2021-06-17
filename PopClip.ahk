@@ -59,26 +59,44 @@ ToolWindow:
         Gui, Add, Button, x+0 yp hp gToLogseq, Logseq
         Gui, Add, Button, x+0 yp hp gPLink,[[]]
         Gui, Add, Button, x+0 yp hp gLCode,```` 
-        Gui, Add, Button, x+0 yp hp gHighlight,hlight
+        Gui, Add, Button, x+0 yp hp gCode,`````` 
+        Gui, Add, Button, x+0 yp hp g粗体,B
+        Gui, Add, Button, x+0 yp hp g斜体,I
+        Gui, Add, Button, x+0 yp hp g下划线,U
+        Gui, Add, Button, x+0 yp hp g删除线,st
+        Gui, Add, Button, x+0 yp hp gHighlight,HL
 
+
+        ; Gui, Add, Picture, x+0 yp wp hp g优点, tm_pink.png
+        ; Gui, Add, Picture, x+0 yp wp hp g概念, tm_green.png
+        ; Gui, Add, Picture, x+0 yp wp hp g注意, tm_blue.png
+        ; Gui, Add, Picture, x+0 yp wp hp g次重, tm_yellow.png
+        ; Gui, Add, Picture, x+0 yp wp hp g重点, tm_red.png
+        ; Gui, Add, Picture, x+0 yp wp hp g结论, tm_orange.png
+        ; Gui, Add, Picture, x+0 yp wp hp gtips, tm_yellow.png
+        ; Gui, Add, Picture, x+0 yp wp hp g有用, tm_blue.png
         
-        Gui, Add, Button, xm-16 yp+25 w40 h25 g缺点, 缺点
-        Gui, Add, Button, x+0 yp wp hp g优点, 优点
-        Gui, Add, Button, x+0 yp wp hp g概念, 概念
-        Gui, Add, Button, x+0 yp wp hp g一般定义, 定义
-        Gui, Add, Button, x+0 yp wp hp g注意, 注意
-        Gui, Add, Button, x+0 yp wp hp g次重, 次重
-        Gui, Add, Button, x+0 yp wp hp g重点, 重点 
-        Gui, Add, Button, x+0 yp wp hp g有用, 有用    
-        Gui, Add, Button, x+0 yp wp hp gtips, tips
-        Gui, Add, Button, x+0 yp wp hp g方法, 方法
-        Gui, Add, Button, x+0 yp wp hp g笔记, 笔记            
-        Gui, Add, Button, x+0 yp wp hp g问题, 问题
-        Gui, Add, Button, x+0 yp wp hp g注释, 注释
-        Gui, Add, Button, x+0 yp wp hp g结论, 结论
-        Gui, Add, Button, x+0 yp wp hp g警惕, 警惕
-        Gui, Add, Button, x+0 yp wp hp g分析, 分析
-        Gui, Add, Button, x+0 yp wp hp g描述, 描述    
+        Gui, Add, Button, xm-16 yp+25 w25 h25 g缺点, 缺
+        Gui, Add, Button, x+0 yp wp hp g优点, 优
+        Gui, Add, Button, x+0 yp wp hp g概念, 概
+        Gui, Add, Button, x+0 yp wp hp g一般定义, 定
+        Gui, Add, Button, x+0 yp wp hp g注意, 注
+        Gui, Add, Button, x+0 yp wp hp g次重, 次
+        Gui, Color, , yellow,
+        Gui, font, cblack
+        Gui, Add, Button, x+0 yp wp hp g重点 v重点, 重
+        ; GuiControl +Backgroundred, 重点
+        Gui, Add, Button, x+0 yp wp hp g有用, 用    
+        Gui, Add, Button, x+0 yp wp hp gtips, tip
+        Gui, Add, Button, x+0 yp wp hp g方法, 法
+        Gui, Add, Button, x+0 yp wp hp g笔记, 记            
+        Gui, Add, Button, x+0 yp wp hp g问题, 问
+        Gui, Add, Button, x+0 yp wp hp g注释, 释
+        Gui, Add, Button, x+0 yp wp hp g结论, 结
+        Gui, Add, Button, x+0 yp wp hp g警惕, 警
+        Gui, Add, Button, x+0 yp wp hp g分析, 析
+        Gui, Add, Button, x+0 yp wp hp g描述, 描
+        Gui, Add, Button, x+0 yp wp hp g清除样式, 除    
 Return
 #IfWinNotActive, ahk_group whiteList
 ~LButton::
@@ -339,6 +357,55 @@ LCode:
     Send, ^v
 Return
 }
+Code:
+{ Gosub, Copy
+    ClipBoard:="```````r`n" ClipBoard "`r`n``````"
+    Send, ^v
+Return
+}
+Highlight:
+Gosub, Copy
+IfWinActive, ahk_exe Logseq.exe
+    Send,^+h
+else{
+    ClipBoard:="^^" ClipBoard "^^"
+    Send, ^v
+    }
+Return
+粗体:
+{Gosub, Copy
+    IfWinActive, ahk_exe Logseq.exe
+        Send,^b
+    else{
+        ClipBoard:="**" ClipBoard "**"
+        Send, ^v
+    }
+Return
+}
+斜体:
+{Gosub, Copy
+IfWinActive, ahk_exe Logseq.exe
+    Send,^i
+else{
+    ClipBoard:="_" ClipBoard "_"
+    Send, ^v
+    }
+Return
+}
+下划线:
+{Gosub, Copy
+; IfWinActive, ahk_exe Logseq.exe
+; {
+    ClipBoard:="<ins>" ClipBoard "</ins>"
+    Send, ^v
+; }
+Return
+}
+删除线:
+Gosub, Copy
+ClipBoard:="~~" ClipBoard "~~"
+Send, ^v
+Return
 
 重点:
 SelectedAddStyle4Logseq("重点")
@@ -393,7 +460,9 @@ SelectedAddStyle4Logseq("注释")
 ; Send, ^v
 ; Send,{Left}
 return
-
+清除样式:
+SelectedRemoveStyle4Logseq()
+return
 SelectedAddStyle4Logseq(Style){
     ; global win
     Gosub, Copy
@@ -424,40 +493,16 @@ SelectedAddStyle4Logseq(Style){
     if (Style="注释")
         Send,{Left}
 }
-SelectedRemoveStyle4Logseq(){   ;只能一次去除一个样式，同时去除多个会把第一个 [] 之后的 [] 中的字去掉
+SelectedRemoveStyle4Logseq(){  
+    Gosub, Copy
     If Clipboard contains ](重点),](次重),](注意),](概念),](结论),](优点),](问题),](缺点),](tips),](有用),](警惕),](笔记),](分析),](方法),](一般定义),](描述),](注:
+    {
         ; Clipboard:=RegExReplace(Clipboard, "\[([\s\S]+?)\]\(\S+\)$", "$1")  ；
         Clipboard:=RegExReplace(Clipboard, "\[([\s\S]+?)\]\(\S+\)", "$1")
-    Send, ^v
-}
-
-Highlight:
-Gosub, Copy
-IfWinActive, ahk_exe Logseq.exe
-    Send,^+h
-else{
-    ClipBoard:="^^" ClipBoard "^^"
-    Send, ^v
-    }
-Return
-粗体:
-Gosub, Copy
-    IfWinActive, ahk_exe Logseq.exe
-        Send,^b
-    else{
-        ClipBoard:="**" ClipBoard "**"
         Send, ^v
     }
-Return
-斜体:
-Gosub, Copy
-IfWinActive, ahk_exe Logseq.exe
-    Send,^i
-else{
-    ClipBoard:="_" ClipBoard "_"
-    Send, ^v
-    }
-Return
+}
+
 
 ToLogseq:
 Gosub, Copy
