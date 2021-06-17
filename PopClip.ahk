@@ -36,18 +36,8 @@ ToolWindow:
     ;Gui, Add, Text, xcurPosX/2 ycurPosY-115 w0 h%controlHight%, ; 初始定位
     ;Gui, Add, Text, x%curPos%  y%curPosY%-115 w0 h%controlHight%, ; 初始定位
 ;MsgBox, %ClipBoard%
-    If ClipBoard in ,%A_Space%,%A_Tab%,`r`n,`r,`n
-    {
-        If (winClipToggle=1)
-        {
-            Gui, Add, Button, x+0 yp hp gSelectAll w25, all
-            Gui, Add, Button, x+0 yp hp gPaste, paste
-            Gui, Add, Button, x+0 yp hp wp gToLogseq, Logseq
-        }
-    }
-    Else
-    {
-        Gui, Add, Button, x+0 w25 h25, 1
+        Gui, Add, Button, x+0 w25 h25 gGoogleSearch, G
+        Gui, Add, Button, x+0 wp hp, 1
         Gui, Add, Button, x+0 wp hp, 2
         Gui, Add, Button, x+0 wp hp, 3
         Gui, Add, Button, x+0 wp hp, 4
@@ -59,39 +49,39 @@ ToolWindow:
         Gui, Add, Button, x+0 wp hp, 10
         Gui, Add, Button, x+0 wp hp, 11
         Gui, Add, Button, x+0 wp hp, 12
-        Gui, Add, Button, x+0 wp hp gGoogleSearch, G
         Gui, Add, Button, x+0 yp hp vgTranslate gGoogleTranslate, G翻
         Gui, Add, Button, x+0 yp hp vdTranslate gDeepLTranslate, D翻
+        
         Gui, Add, Button, xm-16 yp+25 h25 gSelectAll wp, all
-        ; If (winClipToggle=1)
-        ; {
-            Gui, Add, Button, x+0 yp hp gCut, cut
-            Gui, Add, Button, x+0 yp hp gCopy, copy
-            Gui, Add, Button, x+0 yp hp gPaste, paste
-            Gui, Add, Button, x+0 yp hp gToLogseq, Logseq
- 
-            Gui, Add, Button, x+0 yp hp gPLink,[[]]
-            Gui, Add, Button, x+0 yp hp gLCode,```` 
-            Gui, Add, Button, x+0 yp hp gHighlight,hlight
-        ; }
-        ; Else
-            ; Gui, Add, Button, x+0 yp hp gCopy, copy
+        Gui, Add, Button, x+0 yp hp gCut, cut
+        Gui, Add, Button, x+0 yp hp gCopy, copy
+        Gui, Add, Button, x+0 yp hp gPaste, paste
+        Gui, Add, Button, x+0 yp hp gToLogseq, Logseq
+        Gui, Add, Button, x+0 yp hp gPLink,[[]]
+        Gui, Add, Button, x+0 yp hp gLCode,```` 
+        Gui, Add, Button, x+0 yp hp gHighlight,hlight
+
         
         Gui, Add, Button, xm-16 yp+25 w40 h25 g缺点, 缺点
         Gui, Add, Button, x+0 yp wp hp g优点, 优点
         Gui, Add, Button, x+0 yp wp hp g概念, 概念
+        Gui, Add, Button, x+0 yp wp hp g一般定义, 定义
         Gui, Add, Button, x+0 yp wp hp g注意, 注意
         Gui, Add, Button, x+0 yp wp hp g次重, 次重
-        Gui, Add, Button, x+0 yp wp hp g重点, 重点
-        Gui, Add, Button, x+0 yp wp hp g结论, 结论
+        Gui, Add, Button, x+0 yp wp hp g重点, 重点 
+        Gui, Add, Button, x+0 yp wp hp g有用, 有用    
         Gui, Add, Button, x+0 yp wp hp gtips, tips
-        Gui, Add, Button, x+0 yp wp hp g有用, 有用
-    }
+        Gui, Add, Button, x+0 yp wp hp g方法, 方法
+        Gui, Add, Button, x+0 yp wp hp g笔记, 笔记            
+        Gui, Add, Button, x+0 yp wp hp g问题, 问题
+        Gui, Add, Button, x+0 yp wp hp g注释, 注释
+        Gui, Add, Button, x+0 yp wp hp g结论, 结论
+        Gui, Add, Button, x+0 yp wp hp g警惕, 警惕
+        Gui, Add, Button, x+0 yp wp hp g分析, 分析
+        Gui, Add, Button, x+0 yp wp hp g描述, 描述    
 Return
-
 #IfWinNotActive, ahk_group whiteList
 ~LButton::
-    ;Gui,Destroy
     Gui,Hide
 Return
 #IfWinNotActive
@@ -146,11 +136,22 @@ ShowMainGui(perPosX,perPosY,preTime)
         ; 从左向右拖选拖动一段距离才触发浮动工具栏，Y大于10, 在当前坐标弹出界面
         If (curPosX-perPosX>10)       ; || (curPosY-perPosY>10)
         {
-            GetSelectText()
-            ShowWinclip()
+            if WinActive("ahk_exe chrome.exe")
+                Return
+            else {
+                GetSelectText()
+                ShowWinclip()
+            }
         }
-        else if (perPosX-curPosX>10)    ;从右向左拖选拖动一段距离才触发直接复制
-            GetSelectText()
+        else if (perPosX-curPosX>10){    ;从右向左拖选拖动一段距离才触发直接复制
+            if WinActive("ahk_exe chrome.exe"){
+                GetSelectText()
+                ShowWinclip()
+            }
+            else
+                ; Send,^c
+                GetSelectText("1")
+        }
         ;if WinActive("ahk_exe chrome.exe") && (perPosY-curPosY>10)   ;在chrome中从下往上拖动，是复制链接和标题为markdown的形式
         ;{
             ;ToolTip,%Clipboard%
@@ -162,18 +163,16 @@ ShowMainGui(perPosX,perPosY,preTime)
     ;}
     Else
         Gui,Hide
-        ;Gui, Destroy
     winClipToggle:=0
 }
 
-GetSelectText()
+GetSelectText(noClipSaved="")
 {
     global
-    ;if !(noClipSaved="1")   ;如果是保存到其他剪贴板，就要保存之前剪贴板，否则直接复制，不保存之前的剪贴板
-        ;ClipSaved:=ClipBoardAll
+    if (noClipSaved="")   ;如果是保存到其他剪贴板，就要保存之前剪贴板，否则直接复制，不保存之前的剪贴板
+        ClipSaved:=ClipBoardAll
+    ; MsgBox,%ClipBoard%-%ClipSaved%
     ClipBoard:=""
-    ; PostMessage, 0x301, , , , ahk_id %win% 
-    ; PostMessage WM_COPY not work for some windows (even steam or notepad and more), why?
     Send, {CtrlDown}c
     ClipWait 0.1
     Send, {CtrlUp}
@@ -200,12 +199,14 @@ GetSelectText()
         SetTimer, CleanTip, 1000
         }
 
-    ;selectText:=ClipBoard
-    ;if !(noClipSaved=1){   ;如果是保存到其他剪贴板，就要保存之前剪贴板，否则直接复制，不保存之前的剪贴板
-        ;ClipBoard:=""
-        ;ClipBoard:=ClipSaved
-        ;ClipSaved:=""
-        ;}
+    selectText:=ClipBoard
+    ; MsgBox,%ClipBoard%-%ClipSaved%
+    if (noClipSaved=""){   ;如果是保存到其他剪贴板，就要保存之前剪贴板，否则直接复制，不保存之前的剪贴板
+        ClipBoard:=""
+        ClipBoard:=ClipSaved
+        ClipSaved:=""
+    }
+    ; MsgBox,%ClipBoard%-%ClipSaved%
 }
 
 ShowWinclip()
@@ -235,35 +236,35 @@ ShowWinclip()
 }
 
 GoogleSearch:
-{    Gui, Destroy
-    urlEncodedText:=UriEncode(ClipBoard)
+{    Gui,Hide
+    urlEncodedText:=UriEncode(selectText)
     Run, https://www.google.com/search?ie=utf-8&oe=utf-8&q=%urlEncodedText%
 Return
 }
 SelectAll:
-{    Gui, Destroy
+{  ; Gui, Destroy
     WinActivate, ahk_id %win%
     WinWaitActive, ahk_id %win%
     Send, {CtrlDown}a
     Sleep, 100
     Send, {CtrlUp}
-    GetSelectText()
+    GetSelectText("1")
     ShowWinclip()
 Return
 }
 Copy:
-{    Gui, Destroy
+{ Gui,Hide
     WinActivate, ahk_id %win%
     WinWaitActive, ahk_id %win%
-    ;ClipBoard:=""
-    ;ClipBoard:=ClipBoard
+    ClipBoard:=""
+    ClipBoard:=selectText
     ;If (FileExist(SyncPath))
     ;{
         ;FileSetAttrib, -R, %SyncPath%\WinPopclip
         ;FileDelete, %SyncPath%\WinPopclip
         ;FileAppend,
         ;(
-        ;%ClipBoard%
+        ;%selectText%
         ;), %SyncPath%\WinPopclip
     ;}
 Return
@@ -274,10 +275,10 @@ Cut:
 Return
 
 Paste:
-{    Gui, Destroy
-Gosub, Copy
+{   Gui,Hide
     WinActivate, ahk_id %win%
-    WinWaitActive, ahk_id %win%
+    WinWaitActive, ahk_id %win% 
+    ; MsgBox,%ClipBoard%-%ClipSaved%
     Send, {CtrlDown}v
     Sleep, 100
     Send, {CtrlUp}
@@ -285,14 +286,14 @@ Return
 }
 
 GoogleTranslate:
-{    Gui, Destroy
-    ClipBoard:=UriEncode(ClipBoard)
+{    Gui,Hide
+    ClipBoard:=UriEncode(selectText)
     Run, https://translate.google.com/#view=home&op=translate&sl=auto&tl=%userLanguage%&text=%ClipBoard%
 Return
 }
 DeepLTranslate:
-{    Gui, Destroy
-    ClipBoard:=UriEncode(ClipBoard)
+{    Gui,Hide
+    ClipBoard:=UriEncode(selectText)
     Run, https://www.deepl.com/translator#auto/%userLanguage%/%ClipBoard%
 Return
 }
@@ -327,50 +328,23 @@ return, result
 } 
 
 PLink:
-{    
-Gosub, Copy
-    ;ClipBoard:=""
+{    Gosub, Copy
     ClipBoard:="[[" ClipBoard "]]"
-    Send, {CtrlDown}v
-    Sleep, 100
-    Send, {CtrlUp}
+    Send, ^v
 Return
 }
 LCode:
-{
-Gosub, Copy
-    ;ClipBoard:=""
+{ Gosub, Copy
     ClipBoard:="``" ClipBoard "``"
-    Send, {CtrlDown}v
-    Sleep, 100
-    Send, {CtrlUp}
+    Send, ^v
 Return
-}
-Highlight:
-    Gosub, Copy
-    Send, ^+h
-Return
-
-PageLink(){
-; WinActivate()
-; CopyToClipboard()
-ClipBoard:="[[" ClipBoard "]]"
-Send, ^v
-}
-Code(){
-; WinActivate()
-; CopyToClipboard()
-ClipBoard:="``" ClipBoard "``"
-Send, ^v
 }
 
 重点:
 SelectedAddStyle4Logseq("重点")
-Send, ^v
 return
 次重:
 SelectedAddStyle4Logseq("次重")
-Send, ^v
 return
 注意:
 SelectedAddStyle4Logseq("注意")
@@ -416,12 +390,12 @@ SelectedAddStyle4Logseq("描述")
 return
 注释:
 SelectedAddStyle4Logseq("注释")
-Send, ^v
-Send,{Left}
+; Send, ^v
+; Send,{Left}
 return
 
 SelectedAddStyle4Logseq(Style){
-    global win
+    ; global win
     Gosub, Copy
     ; WinActivate,%win%
     ; WinActivate() ;激活当前窗口
@@ -446,9 +420,9 @@ SelectedAddStyle4Logseq(Style){
             ClipBoard:="[" ClipBoard "](" Style ")"
     }
     ; MsgBox,%win%-%Clipboard%
-    ; Send, ^v
-    ; if (Style="注释")
-        ; Send,{Left}
+    Send, ^v
+    if (Style="注释")
+        Send,{Left}
 }
 SelectedRemoveStyle4Logseq(){   ;只能一次去除一个样式，同时去除多个会把第一个 [] 之后的 [] 中的字去掉
     If Clipboard contains ](重点),](次重),](注意),](概念),](结论),](优点),](问题),](缺点),](tips),](有用),](警惕),](笔记),](分析),](方法),](一般定义),](描述),](注:
@@ -457,32 +431,33 @@ SelectedRemoveStyle4Logseq(){   ;只能一次去除一个样式，同时去除�
     Send, ^v
 }
 
-Highlight(){
+Highlight:
+Gosub, Copy
 IfWinActive, ahk_exe Logseq.exe
     Send,^+h
 else{
     ClipBoard:="^^" ClipBoard "^^"
     Send, ^v
     }
-}
-粗体(){
+Return
+粗体:
+Gosub, Copy
     IfWinActive, ahk_exe Logseq.exe
         Send,^b
     else{
         ClipBoard:="**" ClipBoard "**"
         Send, ^v
     }
-}
-斜体(){
+Return
+斜体:
+Gosub, Copy
 IfWinActive, ahk_exe Logseq.exe
     Send,^i
 else{
     ClipBoard:="_" ClipBoard "_"
     Send, ^v
     }
-}
-
-
+Return
 
 ToLogseq:
 Gosub, Copy
@@ -497,7 +472,7 @@ Return
 GuiEscape:
 GuiClose:
 SetTimer,GuiClose,Off
-Gui, Destroy
+Gui, Hide
 Return
 
 
