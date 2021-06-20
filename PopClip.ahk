@@ -29,98 +29,155 @@ Loop, read, %A_ScriptDir%/White List.txt
 }
 
 ToolWindow:
-    Gui, +ToolWindow -Caption +AlwaysOnTop ; -DPIScale
-    Gui, Color, %bGColor%
-    Gui, font, s%fontSize% c%fontColor%, %fontFamily%
-    Gui, Add, Text, x0 y0 w0 h%controlHight%, ; 初始定位
-    ;Gui, Add, Text, xcurPosX/2 ycurPosY-115 w0 h%controlHight%, ; 初始定位
-    ;Gui, Add, Text, x%curPos%  y%curPosY%-115 w0 h%controlHight%, ; 初始定位
+{
+Gui, +ToolWindow -Caption +AlwaysOnTop ; -DPIScale
+Gui, Color, %bGColor%
+Gui, font, s%fontSize% c%fontColor%, %fontFamily%
+Gui, Add, Text, x0 y0 w0 h%controlHight%, ; 初始定位
+;Gui, Add, Text, xcurPosX/2 ycurPosY-115 w0 h%controlHight%, ; 初始定位
+;Gui, Add, Text, x%curPos%  y%curPosY%-115 w0 h%controlHight%, ; 初始定位
 ;MsgBox, %ClipBoard%
-        Gui, Add, Button, x+0 w25 h25 gGoogleSearch, G
-        Gui, Add, Button, x+0 wp hp, 1
-        Gui, Add, Button, x+0 wp hp, 2
-        Gui, Add, Button, x+0 wp hp, 3
-        Gui, Add, Button, x+0 wp hp, 4
-        Gui, Add, Button, x+0 wp hp, 5
-        Gui, Add, Button, x+0 wp hp, 6
-        Gui, Add, Button, x+0 wp hp, 7
-        Gui, Add, Button, x+0 wp hp, 8
-        Gui, Add, Button, x+0 wp hp, 9
-        Gui, Add, Button, x+0 wp hp, 10
-        Gui, Add, Button, x+0 wp hp, 11
-        Gui, Add, Button, x+0 wp hp, 12
-        Gui, Add, Button, x+0 yp hp vgTranslate gGoogleTranslate, G翻
-        Gui, Add, Button, x+0 yp hp vdTranslate gDeepLTranslate, D翻
-        
-        Gui, Add, Button, xm-16 yp+25 h25 gSelectAll wp, all
-        Gui, Add, Button, x+0 yp hp gCut, cut
-        Gui, Add, Button, x+0 yp hp gCopy, copy
-        Gui, Add, Button, x+0 yp hp gPaste, paste
-        Gui, Add, Button, x+0 yp hp gToLogseq, Logseq
-        Gui, Add, Button, x+0 yp hp gPLink,[[]]
-        Gui, Add, Button, x+0 yp hp gLCode,```` 
-        Gui, Add, Button, x+0 yp hp gCode,`````` 
-        Gui, Add, Button, x+0 yp hp g粗体,B
-        Gui, Add, Button, x+0 yp hp g斜体,I
-        Gui, Add, Button, x+0 yp hp g下划线,U
-        Gui, Add, Button, x+0 yp hp g删除线,st
-        Gui, Add, Button, x+0 yp hp gHighlight,HL
+Gui, Add, Button, x+0 w25 h25 gGoogleSearch, G
+Gui, Add, Button, x+0 wp hp, 1
+Gui, Add, Button, x+0 wp hp, 2
+Gui, Add, Button, x+0 wp hp, 3
+Gui, Add, Button, x+0 wp hp, 4
+Gui, Add, Button, x+0 wp hp, 5
+Gui, Add, Button, x+0 wp hp, 6
+Gui, Add, Button, x+0 wp hp, 7
+Gui, Add, Button, x+0 wp hp, 8
+Gui, Add, Button, x+0 wp hp, 9
+Gui, Add, Button, x+0 wp hp, 10
+Gui, Add, Button, x+0 wp hp, 11
+Gui, Add, Button, x+0 wp hp, 12
+Gui, Add, Button, x+0 yp hp vgTranslate gGoogleTranslate, G翻
+Gui, Add, Button, x+0 yp hp vdTranslate gDeepLTranslate, D翻
+
+Gui, Add, Button, xm-16 yp+25 w25 h25 gSelectAll, 全
+Gui, Add, Button, x+0 yp wp hp gCut, 剪
+Gui, Add, Button, x+0 yp wp hp gCopy, 复
+Gui, Add, Button, x+0 yp wp hp gPaste, 贴
+Gui, Add, Button, x+0 yp hp gToLogseq, Logseq
+Gui, Add, Button, x+0 yp hp gPLink,[[]]
+Gui, Add, Button, x+0 yp hp gLCode,```` 
+Gui, Add, Button, x+0 yp hp gCode,`````` 
+Gui, Add, Button, x+0 yp hp g粗体,B
+Gui, Add, Button, x+0 yp hp g斜体,I
+Gui, Add, Button, x+0 yp hp g下划线,U
+Gui, Add, Button, x+0 yp hp g删除线,st
+Gui, Add, Button, x+0 yp hp gHighlight,HL
+; Gui, Add, Picture, x+0 yp wp hp g优点, tm_pink.png
+; Gui, Add, Picture, x+0 yp wp hp g概念, tm_green.png
+; Gui, Add, Picture, x+0 yp wp hp g注意, tm_blue.png
+; Gui, Add, Picture, x+0 yp wp hp g次重, tm_yellow.png
+; Gui, Add, Picture, x+0 yp wp hp g重点, tm_red.png
+; Gui, Add, Picture, x+0 yp wp hp g结论, tm_orange.png
+; Gui, Add, Picture, x+0 yp wp hp gtips, tm_yellow.png
+; Gui, Add, Picture, x+0 yp wp hp g有用, tm_blue.png
+
+Gui, Add, Button, xm-16 yp+25 w25 h25 g缺点, 缺
+Gui, Add, Button, x+0 yp wp hp g优点, 优
+Gui, Add, Button, x+0 yp wp hp g概念, 概
+Gui, Add, Button, x+0 yp wp hp g一般定义, 定
+Gui, Add, Button, x+0 yp wp hp g注意, 注
+Gui, Add, Button, x+0 yp wp hp g次重, 次
+; Gui, Color, , yellow,
+; Gui, font, cblack
+Gui, Add, Button, x+0 yp wp hp g重点 v重点, 重
+; GuiControl +Backgroundred, 重点
+Gui, Add, Button, x+0 yp wp hp g有用, 用    
+Gui, Add, Button, x+0 yp hp gtips, tip
+Gui, Add, Button, x+0 yp w25 hp g方法, 法
+Gui, Add, Button, x+0 yp wp hp g笔记, 记            
+Gui, Add, Button, x+0 yp wp hp g问题, 问
+Gui, Add, Button, x+0 yp wp hp g注释, 释
+Gui, Add, Button, x+0 yp wp hp g结论, 结
+Gui, Add, Button, x+0 yp wp hp g警惕, 警
+Gui, Add, Button, x+0 yp wp hp g分析, 析
+Gui, Add, Button, x+0 yp wp hp g描述, 描
+Gui, Add, Button, x+0 yp wp hp g清除样式, 除    
+Gui +LastFound  ; 让 GUI 窗口成为上次找到的窗口以用于下一行的命令.
+; WinSet, TransColor, %bGColor%
 
 
-        ; Gui, Add, Picture, x+0 yp wp hp g优点, tm_pink.png
-        ; Gui, Add, Picture, x+0 yp wp hp g概念, tm_green.png
-        ; Gui, Add, Picture, x+0 yp wp hp g注意, tm_blue.png
-        ; Gui, Add, Picture, x+0 yp wp hp g次重, tm_yellow.png
-        ; Gui, Add, Picture, x+0 yp wp hp g重点, tm_red.png
-        ; Gui, Add, Picture, x+0 yp wp hp g结论, tm_orange.png
-        ; Gui, Add, Picture, x+0 yp wp hp gtips, tm_yellow.png
-        ; Gui, Add, Picture, x+0 yp wp hp g有用, tm_blue.png
-        
-        Gui, Add, Button, xm-16 yp+25 w25 h25 g缺点, 缺
-        Gui, Add, Button, x+0 yp wp hp g优点, 优
-        Gui, Add, Button, x+0 yp wp hp g概念, 概
-        Gui, Add, Button, x+0 yp wp hp g一般定义, 定
-        Gui, Add, Button, x+0 yp wp hp g注意, 注
-        Gui, Add, Button, x+0 yp wp hp g次重, 次
-        Gui, Color, , yellow,
-        Gui, font, cblack
-        Gui, Add, Button, x+0 yp wp hp g重点 v重点, 重
-        ; GuiControl +Backgroundred, 重点
-        Gui, Add, Button, x+0 yp wp hp g有用, 用    
-        Gui, Add, Button, x+0 yp wp hp gtips, tip
-        Gui, Add, Button, x+0 yp wp hp g方法, 法
-        Gui, Add, Button, x+0 yp wp hp g笔记, 记            
-        Gui, Add, Button, x+0 yp wp hp g问题, 问
-        Gui, Add, Button, x+0 yp wp hp g注释, 释
-        Gui, Add, Button, x+0 yp wp hp g结论, 结
-        Gui, Add, Button, x+0 yp wp hp g警惕, 警
-        Gui, Add, Button, x+0 yp wp hp g分析, 析
-        Gui, Add, Button, x+0 yp wp hp g描述, 描
-        Gui, Add, Button, x+0 yp wp hp g清除样式, 除    
+Gui,NoMD: +ToolWindow -Caption +AlwaysOnTop ; -DPIScale
+Gui,NoMD: Color, %bGColor%
+Gui,NoMD: font, s%fontSize% c%fontColor%, %fontFamily%
+Gui,NoMD: Add, Text, x0 y0 w0 h%controlHight%, ; 初始定位
+;Gui,NoMD: Add, Text, xcurPosX/2 ycurPosY-115 w0 h%controlHight%, ; 初始定位
+;Gui,NoMD: Add, Text, x%curPos%  y%curPosY%-115 w0 h%controlHight%, ; 初始定位
+;MsgBox, %ClipBoard%
+Gui,NoMD: Add, Button, x+0 w25 h25 gGoogleSearch, G
+Gui,NoMD: Add, Button, x+0 wp hp, 1
+Gui,NoMD: Add, Button, x+0 wp hp, 2
+Gui,NoMD: Add, Button, x+0 wp hp, 3
+Gui,NoMD: Add, Button, x+0 wp hp, 4
+Gui,NoMD: Add, Button, x+0 wp hp, 5
+Gui,NoMD: Add, Button, x+0 wp hp, 6
+Gui,NoMD: Add, Button, x+0 wp hp, 7
+Gui,NoMD: Add, Button, x+0 wp hp, 8
+Gui,NoMD: Add, Button, x+0 wp hp, 9
+Gui,NoMD: Add, Button, x+0 wp hp, 10
+Gui,NoMD: Add, Button, x+0 wp hp, 11
+Gui,NoMD: Add, Button, x+0 wp hp, 12
+Gui,NoMD: Add, Button, x+0 yp hp vgTranslate gGoogleTranslate, G翻
+Gui,NoMD: Add, Button, x+0 yp hp vdTranslate gDeepLTranslate, D翻
+
+Gui,NoMD: Add, Button, xm-16 yp+25 w25 h25 gSelectAll, 全
+Gui,NoMD: Add, Button, x+0 yp wp hp gCut, 剪
+Gui,NoMD: Add, Button, x+0 yp wp hp gCopy, 复
+Gui,NoMD: Add, Button, x+0 yp wp hp gPaste, 贴
+Gui,NoMD: Add, Button, x+0 yp hp gToLogseq, Logseq
+Gui,NoMD:  +LastFound  ; 让 GUI 窗口成为上次找到的窗口以用于下一行的命令.
+WinSet, TransColor, %bGColor%
+
 Return
+}
 #IfWinNotActive, ahk_group whiteList
 ~LButton::
     Gui,Hide
+    Gui,NoMD: Hide
+    CoordMode, Mouse, Screen    ;这一句，最好加上，不然在切换窗口的时候容易误触发；当然误触发应该也没啥事…
+    MouseGetPos, x1, y1
+    KeyWait, LButton, U
+    MouseGetPos, x2, y2
+    if ((x1-x2)>10)        ;当然得从右向左拖选拖动一段距离才触发
+    {    ; Tooltip,x1=%x1% y1=%y1%`nx2=%x2% y2=%y2%
+        GetSelectText("1")
+        ; Send, ^c
+    }
 Return
 #IfWinNotActive
 
 #IfWinActive, ahk_group whiteList
     ; 如果不在脚本界面状态下
 $LButton::
+upCursor=
+downCursor=
     ; ToolTip, %win% %A_TickCount%, 0,0
     ; 获得鼠标当前坐标
     MouseGetPos, perPosX, perPosY
     ; 获得当前时间
     preTime:=A_TickCount
-    If (A_Cursor="IBeam")
-        winClipToggle:=1
+    If (A_Cursor="IBeam"){
+        ; winClipToggle:=1
+        downCursor=true
+        Send, {LButton Down}
+        KeyWait, LButton
+        Send, {LButton Up}
+    }
+    else{
+        Send, {LButton Down}
+        KeyWait, LButton
+        Send, {LButton Up}
+        Exit
+    }
 
-    Send, {LButton Down}
-    KeyWait, LButton
-    Send, {LButton Up}
-
-    If (A_Cursor="IBeam")
-        winClipToggle:=1
+    ; If (A_Cursor="IBeam")
+        ; winClipToggle:=1
+        ; upCursor=true
+    ; If !(A_Cursor="IBeam")
+        ; Exit
 
     If !WinActive(winTitle)
     {
@@ -130,6 +187,8 @@ $LButton::
 Return
 #IfWinActive
 
+
+    
 ShowMainGui(perPosX,perPosY,preTime)
 {
     global
@@ -152,21 +211,21 @@ ShowMainGui(perPosX,perPosY,preTime)
     ;Else if (lButtonDownDelay > 250 && winClipToggle=1) || (lButtonDownDelay > 350)
     ;{
         ; 从左向右拖选拖动一段距离才触发浮动工具栏，Y大于10, 在当前坐标弹出界面
-        If (curPosX-perPosX>10)       ; || (curPosY-perPosY>10)
+        If (curPosX-perPosX>10) && (A_Cursor="IBeam")    ; || (curPosY-perPosY>10)
         {
-            if WinActive("ahk_exe chrome.exe")
-                Return
-            else {
+            ; if WinActive("ahk_exe chrome.exe")
+                ; Return
+            ; else {
                 GetSelectText()
                 ShowWinclip()
-            }
+            ; }
         }
         else if (perPosX-curPosX>10){    ;从右向左拖选拖动一段距离才触发直接复制
-            if WinActive("ahk_exe chrome.exe"){
-                GetSelectText()
-                ShowWinclip()
-            }
-            else
+            ; if WinActive("ahk_exe chrome.exe"){
+                ; GetSelectText()
+                ; ShowWinclip()
+            ; }
+            ; else
                 ; Send,^c
                 GetSelectText("1")
         }
@@ -179,8 +238,10 @@ ShowMainGui(perPosX,perPosY,preTime)
             ;FileAppend,%Clipboard%,E:\GitHub\Logseq\journals\%today%.md,UTF-8
         ;}
     ;}
-    Else
+    Else{
         Gui,Hide
+        Gui,NoMD: Hide
+    }
     winClipToggle:=0
 }
 
@@ -232,9 +293,11 @@ ShowWinclip()
     global
     local x,y,w,h,winMoveX,winMoveY
     ; Gui, Destroy
-    
+    if WinActive("ahk_exe chrome.exe")
+        Gui,NoMD: Show, NA AutoSize x%guiShowX% y%guiShowY%, %winTitle%
+    else
     ;Gui, font
-    Gui, Show, NA AutoSize x%guiShowX% y%guiShowY%, %winTitle%
+        Gui, Show, NA AutoSize x%guiShowX% y%guiShowY%, %winTitle%
     ;WinSet, TransColor, white 250, %winTitle%
     WinGetPos , x, y, w, h, %winTitle%  ;w h 用来保存浮动工具栏的宽度和高度的变量名.
 
@@ -250,11 +313,12 @@ ShowWinclip()
     ;MsgBox % winMoveY
     WinMove, %winTitle%, , winMoveX, winMoveY, w-15*dpiRatio, %winHeightPx%
     ;WinMove, %winTitle%, , curPosX, curPosY, w-15*dpiRatio, %winHeightPx%
-    ;SetTimer,GuiClose,10000
+    SetTimer,GuiClose,10000
 }
 
 GoogleSearch:
-{    Gui,Hide
+{   Gui,Hide
+    Gui,NoMD: Hide
     urlEncodedText:=UriEncode(selectText)
     Run, https://www.google.com/search?ie=utf-8&oe=utf-8&q=%urlEncodedText%
 Return
@@ -271,7 +335,8 @@ SelectAll:
 Return
 }
 Copy:
-{ Gui,Hide
+{   Gui,Hide
+    Gui,NoMD: Hide
     WinActivate, ahk_id %win%
     WinWaitActive, ahk_id %win%
     ClipBoard:=""
@@ -294,6 +359,7 @@ Return
 
 Paste:
 {   Gui,Hide
+    Gui,NoMD: Hide
     WinActivate, ahk_id %win%
     WinWaitActive, ahk_id %win% 
     ; MsgBox,%ClipBoard%-%ClipSaved%
@@ -304,13 +370,15 @@ Return
 }
 
 GoogleTranslate:
-{    Gui,Hide
+{   Gui,Hide
+    Gui,NoMD: Hide
     ClipBoard:=UriEncode(selectText)
     Run, https://translate.google.com/#view=home&op=translate&sl=auto&tl=%userLanguage%&text=%ClipBoard%
 Return
 }
 DeepLTranslate:
-{    Gui,Hide
+{   Gui,Hide
+    Gui,NoMD: Hide
     ClipBoard:=UriEncode(selectText)
     Run, https://www.deepl.com/translator#auto/%userLanguage%/%ClipBoard%
 Return
