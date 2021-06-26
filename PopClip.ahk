@@ -23,6 +23,10 @@ SyncPath:="E:\Dropbox"
 SysGet, VirtualWidth, 78  ;虚拟屏幕的宽度和高度
 SysGet, VirtualHeight, 79
 
+LSJournals=E:\GitHub\Logseq\journals  ;定义 Logseq日记储存目录
+LSPages=E:\GitHub\Logseq\pages
+TextIni=E:\GitHub\Radial_Menu\My codes\Text.ini
+
 Loop, read, %A_ScriptDir%/White List.txt
 {
     GroupAdd, whiteList, ahk_exe %A_LoopReadLine%
@@ -52,13 +56,14 @@ Gui, Add, Button, x+0 wp hp, 11
 Gui, Add, Button, x+0 wp hp, 12
 Gui, Add, Button, x+0 yp hp vgTranslate gGoogleTranslate, G翻
 Gui, Add, Button, x+0 yp hp vdTranslate gDeepLTranslate, D翻
+Gui, Add, Button, x+0 yp hp gDownPic, 下图
 
 Gui, Add, Button, xm-16 yp+25 w25 h25 gSelectAll, 全
 Gui, Add, Button, x+0 yp wp hp gCut, 剪
 Gui, Add, Button, x+0 yp wp hp gCopy, 复
 Gui, Add, Button, x+0 yp wp hp gPaste, 贴
 Gui, Add, Button, x+0 yp hp gToLogseq, Logseq
-Gui, Add, Button, x+0 yp hp gPLink,[[]]
+Gui, Add, Button, x+0 yp hp gPageLink,[[]]
 Gui, Add, Button, x+0 yp hp gLCode,```` 
 Gui, Add, Button, x+0 yp hp gCode,`````` 
 Gui, Add, Button, x+0 yp hp g粗体,B
@@ -66,6 +71,8 @@ Gui, Add, Button, x+0 yp hp g斜体,I
 Gui, Add, Button, x+0 yp hp g下划线,U
 Gui, Add, Button, x+0 yp hp g删除线,st
 Gui, Add, Button, x+0 yp hp gHighlight,HL
+Gui, Add, Button, x+0 yp hp gRemovePageLink,-[[
+Gui, Add, Button, x+0 yp hp gRemovePageLinkadd,-[+#
 ; Gui, Add, Picture, x+0 yp wp hp g优点, tm_pink.png
 ; Gui, Add, Picture, x+0 yp wp hp g概念, tm_green.png
 ; Gui, Add, Picture, x+0 yp wp hp g注意, tm_blue.png
@@ -413,9 +420,24 @@ TransBox(text,originalLang,tragetLang) {
 return, result
 } 
 
-PLink:
+PageLink:
 {    Gosub, Copy
     ClipBoard:="[[" ClipBoard "]]"
+    Send, ^v
+    ; FileAppend,%A_Space%%ClipBoard%%A_Space%,%LSPages%\Key Words.md,UTF-8
+Return
+}
+RemovePageLink:
+{    Gosub, Copy
+    StringReplace,ClipBoard,ClipBoard,[[,,all
+    StringReplace,ClipBoard,ClipBoard,]],,all
+    Send, ^v
+Return
+}
+RemovePageLinkadd:
+{    Gosub, Copy
+    StringReplace,ClipBoard,ClipBoard,[[,#,all
+    StringReplace,ClipBoard,ClipBoard,]],,all
     Send, ^v
 Return
 }
@@ -570,6 +592,37 @@ SelectedRemoveStyle4Logseq(){
         Send, ^v
     }
 }
+
+DownPic:
+{
+Gosub, Copy
+pos=1
+while pos := RegExMatch(Clipboard,"ims)\(http[\S]+?\)",piclink,pos+StrLen(piclink)) ;提取纯 links
+{
+	; links=%links%%m%`r`n
+	imagename=
+	imagename1=
+	StringTrimLeft,piclink,piclink,1
+	StringTrimRight,piclink,piclink,1
+	; Gui,DownPic:Font, s11, 微软雅黑
+	; Gui,DownPic:Add, Picture, %piclink%
+	if piclink not contains .png,.jpg,.gif,.jpeg,.ico,.webp,.bmp,.tiff,.tif,.dwg,.svg
+		imagename=%A_Now%.png
+	else{
+		RegExMatch(piclink,"\/([\w%]+?)\.([\S]{3,4})$",imagename)
+    IfInString,imagename1,`%
+        imagename1:=A_Now
+		imagename=%imagename1%.%imagename2%
+	}
+	ToolTip,%piclink%`n%imagename%`nE:\GitHub\Logseq\assets\picture\%imagename%
+  SetTimer,CleanTip,2000
+	URLDownloadToFile,%piclink%,E:\GitHub\Logseq\assets\picture\%imagename%
+	Clipboard:=RegExReplace(Clipboard, piclink, "E:\GitHub\Logseq\assets\picture\" imagename)
+}
+Send, ^v
+return
+}
+
 
 
 ToLogseq:
